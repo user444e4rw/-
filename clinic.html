@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ЛедиЛайф Клиника</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+    :root {
+      --bg-a: #0d1422;
+      --bg-b: #121f33;
+      --bg-c: #0b1a2b;
+      --ink: #d9e6f7;
+      --ink-soft: #9fb4cf;
+      --brand: #5f8fff;
+      --brand-2: #59d0c5;
+      --card: rgba(16, 30, 49, 0.82);
+      --line: rgba(156, 188, 223, 0.24);
+      --ok: #48d8a6;
+      --warn: #f4b369;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(95, 143, 255, 0.18), transparent 35%),
+        radial-gradient(circle at 80% 80%, rgba(89, 208, 197, 0.14), transparent 40%),
+        linear-gradient(160deg, var(--bg-a), var(--bg-b), var(--bg-c));
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 8% 82%, rgba(159, 136, 255, 0.12), transparent 28%),
+        radial-gradient(circle at 90% 14%, rgba(84, 187, 255, 0.1), transparent 24%);
+      z-index: 0;
+    }
+
+    .container {
+      width: min(1080px, 92%);
+      margin: 0 auto;
+      padding: 28px 0 42px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      font-weight: 900;
+      font-family: "Cormorant Garamond", serif;
+      letter-spacing: 0.3px;
+      color: var(--brand);
+      text-shadow: 0 3px 18px rgba(95, 143, 255, 0.22);
+    }
+
+    .back-link {
+      text-decoration: none;
+      color: #fff;
+      background: linear-gradient(120deg, var(--brand), var(--brand-2));
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      transition: transform 160ms ease;
+    }
+
+    .back-link:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 26px 20px;
+      box-shadow: 0 14px 32px rgba(2, 10, 20, 0.45);
+      backdrop-filter: blur(4px);
+      margin-bottom: 18px;
+      animation: fadeUp 550ms ease both;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.7rem, 4vw, 2.6rem);
+      margin-bottom: 10px;
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .hero p {
+      line-height: 1.5;
+      max-width: 760px;
+      margin-bottom: 12px;
+      color: var(--ink-soft);
+    }
+
+    .hero-owner {
+      justify-self: end;
+      width: min(320px, 100%);
+      background: rgba(13, 27, 43, 0.65);
+      border: 1px solid rgba(145, 178, 214, 0.35);
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .hero-owner img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid rgba(226, 239, 255, 0.8);
+      margin-bottom: 8px;
+    }
+
+    .owner-badge {
+      display: inline-block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #d6e7ff;
+      background: rgba(95, 143, 255, 0.22);
+      border: 1px solid rgba(134, 173, 229, 0.55);
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
+
+    .owner-name {
+      display: block;
+      margin: 2px 0 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #dfeaff;
+    }
+
+    .pill {
+      display: inline-block;
+      background: rgba(95, 143, 255, 0.12);
+      border: 1px solid rgba(131, 170, 230, 0.45);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.92rem;
+      margin-right: 8px;
+      margin-bottom: 6px;
+      color: #cfe2ff;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 12px 24px rgba(2, 10, 20, 0.4);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+      backdrop-filter: blur(3px);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 34px rgba(2, 10, 20, 0.5);
+    }
+
+    .card h2 {
+      font-size: 1.08rem;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      line-height: 1.45;
+      margin-bottom: 10px;
+      min-height: 66px;
+    }
+
+    .price {
+      font-weight: 800;
+      color: var(--brand);
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: #fff;
+      font-weight: 700;
+      background: linear-gradient(120deg, var(--brand), var(--brand-2));
+      transition: transform 160ms ease, filter 160ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: saturate(1.1);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(6, 30, 52, 0.45);
+      padding: 14px;
+      z-index: 1000;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-content {
+      width: min(460px, 100%);
+      background: #12243a;
+      border-radius: 14px;
+      border: 1px solid rgba(155, 188, 225, 0.4);
+      padding: 14px;
+      box-shadow: 0 18px 40px rgba(0, 8, 18, 0.6);
+    }
+
+    .modal-content h3 {
+      margin-bottom: 10px;
+      color: #d7e7ff;
+      font-size: 1.08rem;
+    }
+
+    .form-field {
+      margin-bottom: 10px;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      color: #9eb8d3;
+    }
+
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      border: 1px solid rgba(138, 173, 207, 0.4);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font: inherit;
+      color: #d7e6f7;
+      background: rgba(10, 21, 35, 0.7);
+    }
+
+    .form-field textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary {
+      background: linear-gradient(120deg, #9cb6c9, #7b9bb0);
+    }
+
+    .review-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .review-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      border: 1px dashed rgba(138, 173, 207, 0.45);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: rgba(15, 34, 55, 0.65);
+      color: #caddf2;
+      font-size: 0.92rem;
+    }
+
+    .review-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(214, 232, 252, 0.9);
+      box-shadow: 0 3px 10px rgba(3, 12, 23, 0.55);
+      flex: 0 0 44px;
+    }
+
+    .review-text {
+      line-height: 1.35;
+    }
+
+    .profile-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .profile-item {
+      border: 1px dashed rgba(138, 173, 207, 0.45);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: rgba(15, 34, 55, 0.65);
+      color: #caddf2;
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    .notice {
+      background: var(--card);
+      border: 1px dashed rgba(138, 173, 207, 0.45);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+    }
+
+    .status {
+      margin-top: 10px;
+      font-weight: 700;
+      color: var(--ok);
+      min-height: 22px;
+    }
+
+    .extra-box {
+      margin: 0;
+      background: rgba(26, 39, 54, 0.82);
+      border: 1px solid rgba(222, 173, 120, 0.4);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 8px 18px rgba(0, 10, 20, 0.34);
+    }
+
+    .extra-box h3 {
+      font-size: 0.98rem;
+      margin-bottom: 6px;
+      color: #ffd5a9;
+    }
+
+    .extra-list {
+      list-style: none;
+      display: grid;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .extra-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px dashed rgba(224, 180, 130, 0.45);
+      border-radius: 8px;
+      padding: 6px 8px;
+      background: rgba(55, 43, 30, 0.35);
+    }
+
+    .extra-price {
+      font-weight: 800;
+      color: #ffc785;
+      white-space: nowrap;
+    }
+
+    .extra-note {
+      font-size: 0.82rem;
+      color: #c7a882;
+    }
+
+    .extras-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 10px;
+      margin: 0 0 16px;
+    }
+
+    .team {
+      margin: 0 0 18px;
+    }
+
+    .team h3 {
+      font-size: 1.16rem;
+      margin-bottom: 10px;
+      color: #d2e5fd;
+    }
+
+    .custom-note-box {
+      margin: 0 0 12px;
+      border: 1px dashed rgba(134, 173, 229, 0.65);
+      background: rgba(14, 31, 49, 0.7);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .custom-note-label {
+      display: inline-block;
+      font-size: 0.86rem;
+      color: #bcd5f6;
+      margin-bottom: 6px;
+    }
+
+    .custom-note-text {
+      border-radius: 10px;
+      border: 1px solid rgba(133, 173, 230, 0.45);
+      background: rgba(10, 22, 37, 0.85);
+      color: #e2edff;
+      padding: 10px 12px;
+      line-height: 1.4;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .team-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: 0 10px 22px rgba(0, 10, 20, 0.38);
+    }
+
+    .team-media {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .team-card img {
+      width: min(280px, 100%);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 50%;
+      margin-bottom: 8px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 3px solid rgba(226, 239, 255, 0.9);
+      background: #172e49;
+      box-shadow: 0 10px 24px rgba(2, 10, 20, 0.55);
+      image-rendering: auto;
+      -webkit-mask-image: radial-gradient(circle, #000 97%, transparent 100%);
+      mask-image: radial-gradient(circle, #000 97%, transparent 100%);
+    }
+
+    .mini-actions {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .mini-btn {
+      border: 1px solid rgba(132, 172, 221, 0.55);
+      background: rgba(18, 40, 65, 0.78);
+      color: #cfe3ff;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: transform 140ms ease, background-color 140ms ease;
+    }
+
+    .mini-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(31, 63, 97, 0.95);
+    }
+
+    .team-name {
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .team-role {
+      color: var(--ink-soft);
+      font-size: 0.94rem;
+    }
+
+    .team-tip {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #4a728f;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-owner {
+        justify-self: start;
+      }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <main class="container" id="top">
+    <div class="topbar">
+      <div class="logo">Ишимура лайф Клиника</div>
+      <a class="back-link" href="#top">Женская клиника</a>
+    </div>
+
+    <section class="hero">
+      <div>
+        <h1>Женская клиника с заботой и деликатным подходом</h1>
+        <p>
+          Профилактика, диагностика и консультации в спокойной атмосфере.
+          Объясняем без сложных терминов, работаем бережно и с уважением к вашему комфорту.
+        </p>
+        <span class="pill">Запись 24/7</span>
+        <span class="pill">Консультация онлайн</span>
+        <span class="pill">Женское здоровье</span>
+      </div>
+      <aside class="hero-owner">
+        <img src="assets/images/4.png" alt="Фото владельца клиники">
+        <span class="owner-name">Ковальчук Марк Николаевич (aktybio)</span>
+        <span class="owner-badge"> владелец клиники</span>
+      </aside>
+    </section>
+
+    <section class="team">
+      <h3>Наши мастера</h3>
+      <div class="custom-note-box">
+        <span class="custom-note-label">Важная информация</span>
+        <!-- Отредактируйте текст ниже прямо в коде -->
+        <p class="custom-note-text"><strong>ВАЖНО:</strong> По вопросам интимного массажа обращаться к мастеру Никите</p>
+      </div>
+      <div class="team-grid">
+        <article class="team-card">
+          <div class="team-media">
+            <img src="assets/images/2.png" alt="Фото мастера Никиты">
+            <div class="mini-actions">
+              <button class="mini-btn review-btn" data-master="nikita" type="button">Отзывы</button>
+              <button class="mini-btn profile-btn" data-master="nikita" type="button">Профиль</button>
+            </div>
+          </div>
+          <div class="team-name">Мастер Никита</div>
+          <div class="team-role">Мануальные техники и деликатные восстановительные сеансы</div>
+        </article>
+        <article class="team-card">
+          <div class="team-media">
+            <img src="assets/images/1.png" alt="Фото мастера Дмитрия">
+            <div class="mini-actions">
+              <button class="mini-btn review-btn" data-master="dmitriy" type="button">Отзывы</button>
+              <button class="mini-btn profile-btn" data-master="dmitriy" type="button">Профиль</button>
+            </div>
+          </div>
+          <div class="team-name">Мастер Дмитрий</div>
+          <div class="team-role">Деликатные консультации и работа с внутренним напряжением</div>
+        </article>
+        <article class="team-card">
+          <div class="team-media">
+            <img src="assets/images/3.png" alt="Фото мастера Димочки 3">
+            <div class="mini-actions">
+              <button class="mini-btn review-btn" data-master="dimochka3" type="button">Отзывы</button>
+              <button class="mini-btn profile-btn" data-master="dimochka3" type="button">Профиль</button>
+            </div>
+          </div>
+          <div class="team-name">Мастер Димочка </div>
+          <div class="team-role">Антистресс-сеансы и деликатные восстановительные практики</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="extras-grid">
+      <article class="extra-box">
+        <h3>Доп. услуги врача Никиты (отдельно)</h3>
+        <ul class="extra-list">
+          <li class="extra-item">
+            <span>Экспресс-сеанс (20 мин)</span>
+            <span class="extra-price">+1 500 ₽</span>
+          </li>
+          <li class="extra-item">
+            <span>Углубленный сеанс (40 мин)</span>
+            <span class="extra-price">+2 300 ₽</span>
+          </li>
+        </ul>
+        <p class="extra-note">Стоимость добавляется к приему.</p>
+      </article>
+
+      <article class="extra-box">
+        <h3>Доп. услуги врача Дмитрия (отдельно)</h3>
+        <ul class="extra-list">
+          <li class="extra-item">
+            <span>Экспресс-сессия (25 мин)</span>
+            <span class="extra-price">+1 400 ₽</span>
+          </li>
+          <li class="extra-item">
+            <span>Углубленная сессия (45 мин)</span>
+            <span class="extra-price">+2 200 ₽</span>
+          </li>
+        </ul>
+        <p class="extra-note">Стоимость добавляется к приему.</p>
+      </article>
+    </section>
+
+    <section class="cards">
+      <article class="card">
+        <h2>Первичная консультация специалиста</h2>
+        <p>Сбор жалоб, осмотр и персональный план обследования в мягком и деликатном формате.</p>
+        <div class="price">2 500 ₽</div>
+      </article>
+
+      <article class="card">
+        <h2>УЗИ и базовая диагностика</h2>
+        <p>Современное оборудование, аккуратная процедура и понятное заключение в день визита.</p>
+        <div class="price">1 900 ₽</div>
+      </article>
+
+      <article class="card">
+        <h2>Check-up "Женский баланс"</h2>
+        <p>Комплекс анализов и консультация специалиста для профилактики и контроля женского здоровья.</p>
+        <div class="price">5 900 ₽</div>
+      </article>
+
+    </section>
+
+    <div class="actions">
+      <button class="btn" id="bookSessionBtn">Записаться на сеанс</button>
+    </div>
+    <div class="status" id="status"></div>
+
+    <div class="modal" id="bookingModal" aria-hidden="true">
+      <div class="modal-content">
+        <h3>Запись на сеанс</h3>
+        <form id="bookingForm">
+          <div class="form-field">
+            <label for="clientName">Ваше имя</label>
+            <input id="clientName" name="name" type="text" required>
+          </div>
+          <div class="form-field">
+            <label for="clientPhone">Телефон</label>
+            <input id="clientPhone" name="phone" type="tel" placeholder="+7..." required>
+          </div>
+          <div class="form-field">
+            <label for="clientComment">Комментарий</label>
+            <textarea id="clientComment" name="comment" placeholder="Удобное время и пожелания"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="closeModalBtn">Отмена</button>
+            <button type="submit" class="btn">Отправить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal" id="reviewsModal" aria-hidden="true">
+      <div class="modal-content">
+        <h3 id="reviewsTitle">Отзывы</h3>
+        <ul class="review-list" id="reviewsList"></ul>
+        <div class="modal-actions" style="margin-top: 10px;">
+          <button type="button" class="btn btn-secondary" id="closeReviewsBtn">Закрыть</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="profileModal" aria-hidden="true">
+      <div class="modal-content">
+        <h3 id="profileTitle">Профиль мастера</h3>
+        <ul class="profile-list" id="profileList"></ul>
+        <div class="modal-actions" style="margin-top: 10px;">
+          <button type="button" class="btn btn-secondary" id="closeProfileBtn">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const sessionButton = document.getElementById("bookSessionBtn");
+    const modal = document.getElementById("bookingModal");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const bookingForm = document.getElementById("bookingForm");
+    const status = document.getElementById("status");
+    const reviewButtons = document.querySelectorAll(".review-btn");
+    const profileButtons = document.querySelectorAll(".profile-btn");
+    const reviewsModal = document.getElementById("reviewsModal");
+    const closeReviewsBtn = document.getElementById("closeReviewsBtn");
+    const reviewsTitle = document.getElementById("reviewsTitle");
+    const reviewsList = document.getElementById("reviewsList");
+    const profileModal = document.getElementById("profileModal");
+    const closeProfileBtn = document.getElementById("closeProfileBtn");
+    const profileTitle = document.getElementById("profileTitle");
+    const profileList = document.getElementById("profileList");
+
+    const reviewsByMaster = {
+      nikita: {
+        title: "Отзывы о мастере Никите",
+        items: [
+          {
+            text: "Бабушка Зина, 72: \"Никита шалунишка, но руки золотые, после сеанса спина как новая!\"",
+            image: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji@latest/color/svg/1F475.svg"
+          },
+          {
+            text: "Бабушка Лида, 68: \"Такой вежливый шалунишка, всю процедуру шутил и настроение поднял.\"",
+            image: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji@latest/color/svg/1F475-1F3FB.svg"
+          },
+          {
+            text: "Бабушка Рая, 75: \"Пришла хмурая, ушла довольная. Никита знает подход к людям.\"",
+            image: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji@latest/color/svg/1F475-1F3FC.svg"
+          }
+        ]
+      },
+      dmitriy: {
+        title: "Отзывы о мастере Дмитрии",
+        items: [
+          {
+            text: "Бабушка Валя, 70: \"Дмитрий тот еще шалунишка, но очень деликатный и внимательный.\"",
+            image: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji@latest/color/svg/1F475-1F3FD.svg"
+          },
+          {
+            text: "Бабушка Нина, 73: \"После сессии у Дмитрия будто груз с души сняли.\"",
+            image: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji@latest/color/svg/1F475-1F3FE.svg"
+          },
+          {
+            text: "Бабушка Тома, 69: \"Спокойный, тактичный, шалунишка с большим сердцем.\"",
+            image: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji@latest/color/svg/1F475-1F3FF.svg"
+          }
+        ]
+      },
+      dimochka3: {
+        title: "Отзывы о мастере Димочке 3",
+        items: [
+          {
+            text: "Бабушка Жанна, 71: \"Димочка 3 очень внимательный, после сеанса настроение отличное.\"",
+            image: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji@latest/color/svg/1F475.svg"
+          },
+          {
+            text: "Бабушка Марфа, 76: \"Руки легкие, подход спокойный, мне очень понравилось.\"",
+            image: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji@latest/color/svg/1F475-1F3FD.svg"
+          },
+          {
+            text: "Бабушка Вера, 74: \"Все аккуратно и с заботой, вернусь еще раз.\"",
+            image: "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji@latest/color/svg/1F475-1F3FF.svg"
+          }
+        ]
+      }
+    };
+
+    const profilesByMaster = {
+      nikita: {
+        title: "Профиль: Мастер Никита",
+        items: [
+          "Специализация: мануальные техники и релакс-сеансы",
+          "Стаж: 7 лет",
+          "График: пн-сб, 10:00-21:00",
+          "Стоимость сеанса: от 2 300 ₽",
+          "Фишка: мягкие восстановительные практики"
+        ]
+      },
+      dmitriy: {
+        title: "Профиль: Мастер Дмитрий",
+        items: [
+          "Специализация: деликатные консультации и антистресс",
+          "Стаж: 6 лет",
+          "График: вт-вс, 11:00-20:00",
+          "Стоимость сеанса: от 2 200 ₽",
+          "Фишка: спокойный формат работы 1 на 1"
+        ]
+      },
+      dimochka3: {
+        title: "Профиль: Мастер Димочка ",
+        items: [
+          "Специализация: антистресс-сеансы и восстановление",
+          "Стаж: 5 лет",
+          "График: ежедневно, 12:00-22:00",
+          "Стоимость сеанса: от 2 500 ₽",
+          "Фишка: персональный темп и деликатный подход"
+        ]
+      }
+    };
+
+    sessionButton.addEventListener("click", () => {
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+    });
+
+    closeModalBtn.addEventListener("click", () => {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+    });
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    reviewButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const masterKey = button.dataset.master;
+        const reviewData = reviewsByMaster[masterKey];
+        if (!reviewData) return;
+
+        reviewsTitle.textContent = reviewData.title;
+        reviewsList.innerHTML = reviewData.items
+          .map((item) => `
+            <li class="review-item">
+              <img class="review-avatar" src="${item.image}" alt="Фото автора отзыва">
+              <div class="review-text">${item.text}</div>
+            </li>
+          `)
+          .join("");
+
+        reviewsModal.classList.add("open");
+        reviewsModal.setAttribute("aria-hidden", "false");
+      });
+    });
+
+    profileButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const masterKey = button.dataset.master;
+        const profileData = profilesByMaster[masterKey];
+        if (!profileData) return;
+
+        profileTitle.textContent = profileData.title;
+        profileList.innerHTML = profileData.items
+          .map((text) => `<li class="profile-item">${text}</li>`)
+          .join("");
+
+        profileModal.classList.add("open");
+        profileModal.setAttribute("aria-hidden", "false");
+      });
+    });
+
+    closeReviewsBtn.addEventListener("click", () => {
+      reviewsModal.classList.remove("open");
+      reviewsModal.setAttribute("aria-hidden", "true");
+    });
+
+    reviewsModal.addEventListener("click", (event) => {
+      if (event.target === reviewsModal) {
+        reviewsModal.classList.remove("open");
+        reviewsModal.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    closeProfileBtn.addEventListener("click", () => {
+      profileModal.classList.remove("open");
+      profileModal.setAttribute("aria-hidden", "true");
+    });
+
+    profileModal.addEventListener("click", (event) => {
+      if (event.target === profileModal) {
+        profileModal.classList.remove("open");
+        profileModal.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    bookingForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const name = document.getElementById("clientName").value.trim();
+      const phone = document.getElementById("clientPhone").value.trim();
+
+      alert("Спасибо! Заявка отправлена. Мы свяжемся с вами: " + phone);
+      status.textContent = "Заявка оформлена на имя " + name + ". Ожидайте звонок администратора.";
+
+      bookingForm.reset();
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+    });
+  </script>
+</body>
+</html>
